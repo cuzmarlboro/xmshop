@@ -1,7 +1,7 @@
 /*
  * @LastEditors: hezeying@xdf.cn
  * @Date: 2025-03-30 23:23:42
- * @LastEditTime: 2025-03-31 21:03:40
+ * @LastEditTime: 2025-04-01 22:09:39
  * @FilePath: /xmshop/lib/app/modules/tabs/views/tabs_view.dart
  * @Description: 
  */
@@ -20,6 +20,7 @@ class TabsView extends GetView<TabsController> {
       () => Scaffold(
         // body: controller.pages[controller.currentIndex.value], // 当前选中的页面
         body: PageView(
+          physics: const NeverScrollableScrollPhysics(), // 禁止滑动
           controller: controller.pageController, // 页面控制器
           children: controller.pages, // 页面列表
           onPageChanged: (index) {

@@ -13,6 +13,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   get: ^4.7.2
   flutter_screenutil: ^5.5.4
+  flutter_swiper_view: ^1.1.8
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:
@@ -26,3 +28,7 @@ flutter:
     - family: xmshopIcon #指定一个字体名 根据自己的需求定义
       fonts:
         - asset: assets/fonts/iconfont.ttf
+  assets:
+    - assets/images/xiaomiBanner.png
+    - assets/images/2.0x/xiaomiBanner.png
+    - assets/images/3.0x/xiaomiBanner.png
