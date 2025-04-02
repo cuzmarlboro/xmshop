@@ -11,3 +11,4 @@
 1. [flutter_screenutil](https://pub.dev/packages/flutter_screenutil) 屏幕适配方案，用于调整屏幕和字体大小
 2. [flutter_swiper_view](https://pub.dev/packages/flutter_swiper_view/install) 轮播图组件
 3. [dio](https://pub.dev/packages/dio/install) HTTP 网络请求库
+4. [flutter_staggered_grid_view](https://pub.dev/packages/flutter_staggered_grid_view) 瀑布流组件

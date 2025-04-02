@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 
 class CategoryController extends GetxController {
-  //TODO: Implement CategoryController
+  // 当前选中的索引
+  RxInt selectIndex = 0.obs;
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -19,5 +19,10 @@ class CategoryController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
+  /// @description: 设置当前选中的索引
+  /// @param {int} index
+  /// @return {*}
+  void changeIndex(int index) {
+    selectIndex.value = index;
+  }
 }

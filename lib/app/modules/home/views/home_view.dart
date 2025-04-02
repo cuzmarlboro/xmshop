@@ -1,91 +1,20 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../controllers/home_controller.dart';
 
 import '../../../services/keepAliveWrapper.dart';
-import '../../../services/IconFont.dart';
 import '../../../services/screenAdapter.dart';
+
+import './HomeAppBar.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
-
-  // 顶部导航栏
-  Widget _appBar() {
-    return Positioned(
-      top: 0, // 顶部
-      left: 0, // 左边
-      right: 0, // 右边
-      child: Obx(
-        () => AppBar(
-          leading: controller.flag.value
-              ? const Text("")
-              : const Icon(
-                  IconFont.xiaomi,
-                  color: Colors.white,
-                ),
-          leadingWidth: controller.flag.value
-              ? ScreenAdapter.width(20)
-              : ScreenAdapter.width(140),
-          title: AnimatedContainer(
-            width: controller.flag.value
-                ? ScreenAdapter.width(800)
-                : ScreenAdapter.width(620),
-            height: ScreenAdapter.height(96),
-            // 装饰
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(230, 252, 243, 236), // 背景颜色
-              borderRadius: BorderRadius.circular(30), // 圆角
-            ),
-            duration: const Duration(milliseconds: 300), // 动画时间
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center, // 交叉轴对齐，垂直居中
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(34), // 左边
-                    0, // 上边
-                    ScreenAdapter.width(10), // 右边
-                    0, // 下边
-                  ),
-                  child: const Icon(
-                    Icons.search,
-                    color: Colors.black54,
-                  ),
-                ),
-                Text(
-                  "手机",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: ScreenAdapter.fontSize(32),
-                  ),
-                )
-              ],
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor:
-              controller.flag.value ? Colors.white : Colors.transparent,
-          elevation: 0, // 阴影
-          actions: [
-            IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.qr_code,
-                  color: controller.flag.value ? Colors.black87 : Colors.white,
-                )),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.message,
-                  color: controller.flag.value ? Colors.black87 : Colors.white),
-            )
-          ],
-        ),
-      ),
-    );
-  }
 
   // 轮播图
   Widget _focus() {
@@ -123,6 +52,29 @@ class HomeView extends GetView<HomeController> {
       child: Image.asset(
         "assets/images/xiaomiBanner.png",
         fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  // 广告banner
+  Widget _adBanner() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        ScreenAdapter.width(20),
+        ScreenAdapter.width(20),
+        ScreenAdapter.width(20),
+        0,
+      ),
+      child: Container(
+        height: ScreenAdapter.height(420),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(ScreenAdapter.width(20)),
+          image: const DecorationImage(
+            image: AssetImage("assets/images/xiaomiBanner2.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }
@@ -209,10 +161,275 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  // 热销甄选
+  Widget _bestSelling() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            ScreenAdapter.width(30),
+            ScreenAdapter.height(40),
+            ScreenAdapter.width(30),
+            ScreenAdapter.height(20),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, // 主轴对齐方式
+            crossAxisAlignment: CrossAxisAlignment.center, // 交叉轴对齐方式
+            children: [
+              Text(
+                "热销甄选",
+                style: TextStyle(
+                  fontSize: ScreenAdapter.fontSize(46),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "更多手机 >",
+                style: TextStyle(
+                  fontSize: ScreenAdapter.fontSize(38),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            ScreenAdapter.width(20),
+            0,
+            ScreenAdapter.width(20),
+            ScreenAdapter.height(20),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: SizedBox(
+                  height: ScreenAdapter.height(738),
+                  child: Obx(
+                    () => Swiper(
+                      itemBuilder: (context, index) {
+                        return Image.network(
+                          "https://xiaomi.itying.com/${controller.bestSellingSwiperList[index].pic}",
+                          fit: BoxFit.fill,
+                        );
+                      },
+                      itemCount:
+                          controller.bestSellingSwiperList.length, // 轮播图数量
+                      autoplay: true, // 自动轮播
+                      loop: true, // 无限轮播模式开关
+                      pagination: SwiperPagination(
+                        margin: const EdgeInsets.all(0),
+                        builder: SwiperCustomPagination(
+                          builder: (BuildContext context,
+                              SwiperPluginConfig config) {
+                            return ConstrainedBox(
+                              constraints: BoxConstraints.expand(
+                                height: ScreenAdapter.height(36),
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: const RectSwiperPaginationBuilder(
+                                        color: Colors.black12,
+                                        activeColor: Colors.black54,
+                                      ).build(context, config),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: ScreenAdapter.width(20),
+              ),
+              Expanded(
+                flex: 1,
+                child: SizedBox(
+                  height: ScreenAdapter.height(738),
+                  child: Obx(
+                    () => Column(
+                      children:
+                          controller.sellingPlist.asMap().entries.map((entrie) {
+                        var value = entrie.value;
+                        var picUrl = "https://xiaomi.itying.com/${value.pic}";
+                        return Expanded(
+                          flex: 1,
+                          child: Container(
+                            color: const Color.fromRGBO(246, 246, 246, 1),
+                            margin: EdgeInsets.fromLTRB(0, 0, 0,
+                                entrie.key == 2 ? 0 : ScreenAdapter.height(12)),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: ScreenAdapter.height(20),
+                                      ),
+                                      Text(
+                                        "${value.title}",
+                                        style: TextStyle(
+                                            fontSize:
+                                                ScreenAdapter.fontSize(38),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: ScreenAdapter.height(20),
+                                      ),
+                                      Text(
+                                        "${value.subTitle}",
+                                        style: TextStyle(
+                                          fontSize: ScreenAdapter.fontSize(28),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: ScreenAdapter.height(20),
+                                      ),
+                                      Text(
+                                        "￥${value.price}元",
+                                        style: TextStyle(
+                                          fontSize: ScreenAdapter.fontSize(34),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                      ScreenAdapter.height(8),
+                                    ),
+                                    child: Image.network(
+                                        picUrl.replaceAll("\\", "/"),
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 省心优惠 瀑布流
+  Widget _bestGoods() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+              ScreenAdapter.width(30),
+              ScreenAdapter.height(40),
+              ScreenAdapter.width(30),
+              ScreenAdapter.height(20)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("省心优惠",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: ScreenAdapter.fontSize(46))),
+              Text("全部优惠 >",
+                  style: TextStyle(fontSize: ScreenAdapter.fontSize(38)))
+            ],
+          ),
+        ),
+        Obx(
+          () => Container(
+            padding: EdgeInsets.all(ScreenAdapter.width(26)),
+            color: const Color.fromRGBO(246, 246, 246, 1),
+            child: MasonryGridView.count(
+              crossAxisCount: 2, // 列数
+              mainAxisSpacing: ScreenAdapter.width(26), // 行间距
+              crossAxisSpacing: ScreenAdapter.width(26), // 列间距
+              itemCount: controller.bestPlist.length, //数量
+              shrinkWrap: true, // 收缩，让元素宽度自适应
+              physics:
+                  const NeverScrollableScrollPhysics(), // 禁止滑动 （因为外部已经用了 ListView ）
+              itemBuilder: (context, index) {
+                var picUrl =
+                    "https://miapp.itying.com/${controller.bestPlist[index].sPic}";
+                return Container(
+                  padding: EdgeInsets.all(ScreenAdapter.width(20)),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(ScreenAdapter.width(10)),
+                        child: Image.network(
+                          picUrl.replaceAll("\\", "/"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(ScreenAdapter.width(10)),
+                        width: double.infinity,
+                        child: Text(
+                          "${controller.bestPlist[index].title}",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: ScreenAdapter.fontSize(42),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(ScreenAdapter.width(10)),
+                        width: double.infinity,
+                        child: Text(
+                          "${controller.bestPlist[index].subTitle}",
+                          textAlign: TextAlign.start,
+                          style:
+                              TextStyle(fontSize: ScreenAdapter.fontSize(32)),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(ScreenAdapter.width(10)),
+                        width: double.infinity,
+                        child: Text(
+                          "¥${controller.bestPlist[index].price}",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: ScreenAdapter.fontSize(32),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   // 首页内容区域
   Widget _homePage() {
     return Positioned(
-      top: -ScreenAdapter.height(80),
+      top: -ScreenAdapter.height(160),
       left: 0,
       right: 0,
       bottom: 0,
@@ -222,6 +439,12 @@ class HomeView extends GetView<HomeController> {
           _focus(),
           _xiaomiBanner(),
           _category(),
+          _adBanner(),
+          _bestSelling(),
+          _bestGoods(),
+          SizedBox(
+            height: ScreenAdapter.height(100),
+          ),
         ],
       ),
     );
@@ -234,7 +457,7 @@ class HomeView extends GetView<HomeController> {
         body: Stack(
           children: [
             _homePage(),
-            _appBar(),
+            HomeAppBar(flag: controller.flag),
           ],
         ),
       ),
