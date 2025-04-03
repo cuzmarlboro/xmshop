@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:xmshop/app/services/httpsClient.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -366,8 +367,9 @@ class HomeView extends GetView<HomeController> {
               physics:
                   const NeverScrollableScrollPhysics(), // 禁止滑动 （因为外部已经用了 ListView ）
               itemBuilder: (context, index) {
-                var picUrl =
-                    "https://miapp.itying.com/${controller.bestPlist[index].sPic}";
+                var picUrl = HttpsClient.replaeUri(
+                    '/${controller.bestPlist[index].sPic}');
+
                 return Container(
                   padding: EdgeInsets.all(ScreenAdapter.width(20)),
                   decoration: BoxDecoration(

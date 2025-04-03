@@ -1,3 +1,10 @@
+/*
+ * @LastEditors: hezeying@xdf.cn
+ * @Date: 2025-03-30 23:17:43
+ * @LastEditTime: 2025-04-04 00:03:50
+ * @FilePath: /xmshop/lib/main.dart
+ * @Description: 
+ */
 import 'package:flutter/material.dart'; // 基础组件
 import 'package:flutter/services.dart'; // 系统UI
 
@@ -23,6 +30,10 @@ void main() {
           debugShowCheckedModeBanner: false, // 隐藏 debug 标志
           title: "Application",
           initialRoute: AppPages.INITIAL,
+          theme: ThemeData(
+            primarySwatch: Colors.grey,
+          ),
+          defaultTransition: Transition.rightToLeft, // 配置ios动画
           getPages: AppPages.routes,
         );
       },

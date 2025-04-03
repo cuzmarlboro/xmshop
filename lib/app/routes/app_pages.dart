@@ -1,12 +1,7 @@
-/*
- * @LastEditors: hezeying@xdf.cn
- * @Date: 2025-03-30 23:17:43
- * @LastEditTime: 2025-03-31 20:38:45
- * @FilePath: /xmshop/lib/app/routes/app_pages.dart
- * @Description: 
- */
 import 'package:get/get.dart';
 
+import '../modules/productList/bindings/product_list_binding.dart';
+import '../modules/productList/views/product_list_view.dart';
 import '../modules/tabs/bindings/tabs_binding.dart';
 import '../modules/tabs/views/tabs_view.dart';
 
@@ -22,6 +17,11 @@ class AppPages {
       name: _Paths.TABS,
       page: () => const TabsView(),
       binding: TabsBinding(), // 依赖注入
+    ),
+    GetPage(
+      name: _Paths.PRODUCT_LIST,
+      page: () => const ProductListView(),
+      binding: ProductListBinding(),
     ),
   ];
 }

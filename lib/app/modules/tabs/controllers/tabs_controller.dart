@@ -1,7 +1,7 @@
 /*
  * @LastEditors: hezeying@xdf.cn
  * @Date: 2025-03-30 23:23:42
- * @LastEditTime: 2025-04-03 00:50:05
+ * @LastEditTime: 2025-04-03 22:27:41
  * @FilePath: /xmshop/lib/app/modules/tabs/controllers/tabs_controller.dart
  * @Description: tabs 控制器
  */
@@ -16,10 +16,10 @@ import '../../user/views/user_view.dart';
 
 class TabsController extends GetxController {
   // 当前选中的索引
-  RxInt currentIndex = 1.obs;
+  RxInt currentIndex = 0.obs;
 
   // 页面控制器
-  PageController pageController = PageController(initialPage: 1);
+  PageController pageController = PageController(initialPage: 0);
 
   // 页面列表
   final List<Widget> pages = const [
