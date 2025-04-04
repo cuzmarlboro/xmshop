@@ -3,7 +3,7 @@
 /*
  * @LastEditors: hezeying@xdf.cn
  * @Date: 2025-03-30 23:24:26
- * @LastEditTime: 2025-04-03 23:05:17
+ * @LastEditTime: 2025-04-05 02:24:46
  * @FilePath: /xmshop/lib/app/modules/category/views/category_view.dart
  * @Description: 分类页面
  */
@@ -129,27 +129,35 @@ class CategoryView extends GetView<CategoryController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Container(
-          width: ScreenAdapter.width(840),
-          height: ScreenAdapter.height(96),
-          decoration: BoxDecoration(
-            color: const Color.fromRGBO(246, 246, 246, 1),
-            borderRadius: BorderRadius.circular(30),
+        title: InkWell(
+          child: Container(
+            width: ScreenAdapter.width(840),
+            height: ScreenAdapter.height(96),
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(246, 246, 246, 1),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      ScreenAdapter.width(34), 0, ScreenAdapter.width(10), 0),
+                  child: const Icon(
+                    Icons.search,
+                    color: Colors.black54,
+                  ),
+                ),
+                Text("手机",
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: ScreenAdapter.fontSize(32)))
+              ],
+            ),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(34), 0, ScreenAdapter.width(10), 0),
-                child: const Icon(Icons.search),
-              ),
-              Text("手机",
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: ScreenAdapter.fontSize(32)))
-            ],
-          ),
+          onTap: () {
+            Get.toNamed("/search");
+          },
         ),
         centerTitle: true, // 居中显示
         backgroundColor: Colors.white, // 背景色
