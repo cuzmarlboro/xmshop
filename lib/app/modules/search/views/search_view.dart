@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xmshop/app/routes/app_pages.dart';
 import 'package:xmshop/app/services/screenAdapter.dart';
+import 'package:xmshop/app/services/searchServices.dart';
 
 import '../controllers/search_controller.dart';
 
@@ -41,6 +42,8 @@ class SearchView extends GetView<Search1Controller> {
             },
             // 监听键盘的回车事件
             onSubmitted: (value) {
+              // 保存搜索记录
+              SearchServices.setHistoryData(value);
               // 替换路由
               Get.offAndToNamed(
                 Routes.PRODUCT_LIST,
@@ -55,6 +58,8 @@ class SearchView extends GetView<Search1Controller> {
           TextButton(
             onPressed: () {
               // print("搜索");
+              //保存搜索记录
+              SearchServices.setHistoryData(controller.keywords);
               Get.offAndToNamed(
                 Routes.PRODUCT_LIST,
                 arguments: {"keywords": controller.keywords},
@@ -74,218 +79,153 @@ class SearchView extends GetView<Search1Controller> {
       body: ListView(
         padding: EdgeInsets.all(ScreenAdapter.height(20)),
         children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: ScreenAdapter.height(20)), // 底部内边距
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, // 两端对齐
-              children: [
-                Text(
-                  "搜索历史",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: ScreenAdapter.fontSize(42),
-                  ),
-                ),
-                const Icon(Icons.delete_forever_outlined)
-              ],
-            ),
+          Obx(
+            () => controller.historyList.isNotEmpty
+                ? Padding(
+                    padding: EdgeInsets.only(bottom: ScreenAdapter.height(20)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "搜索历史",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: ScreenAdapter.fontSize(42),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Get.bottomSheet(
+                              Container(
+                                padding: EdgeInsets.all(
+                                  ScreenAdapter.width(20),
+                                ),
+                                color: Colors.white,
+                                width: ScreenAdapter.width(1080),
+                                height: ScreenAdapter.height(360),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "您确定要清空历史记录吗?",
+                                          style: TextStyle(
+                                            fontSize:
+                                                ScreenAdapter.fontSize(48),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: ScreenAdapter.height(40)),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        SizedBox(
+                                          width: ScreenAdapter.width(420),
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  WidgetStateProperty.all(
+                                                const Color.fromARGB(
+                                                    123, 151, 147, 147),
+                                              ),
+                                              // 字体颜色
+                                              foregroundColor:
+                                                  WidgetStateProperty.all(
+                                                      Colors.white),
+                                            ),
+                                            onPressed: () {
+                                              Get.back();
+                                            },
+                                            child: const Text("取消"),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: ScreenAdapter.width(420),
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  WidgetStateProperty.all(
+                                                const Color.fromARGB(
+                                                  123,
+                                                  151,
+                                                  147,
+                                                  147,
+                                                ),
+                                              ),
+                                              // 字体颜色
+                                              foregroundColor:
+                                                  WidgetStateProperty.all(
+                                                Colors.red,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              controller.clearHistoryData();
+                                              Get.back();
+                                            },
+                                            child: const Text("确定"),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.delete_forever_outlined),
+                        )
+                      ],
+                    ),
+                  )
+                : const Text(""),
           ),
-          Wrap(
-            children: [
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                  ScreenAdapter.width(32),
-                  ScreenAdapter.width(16),
-                  ScreenAdapter.width(32),
-                  ScreenAdapter.width(16),
-                ),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)), // 外边距
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("手机"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                  ScreenAdapter.width(32),
-                  ScreenAdapter.width(16),
-                  ScreenAdapter.width(32),
-                  ScreenAdapter.width(16),
-                ),
-                margin: EdgeInsets.all(
-                  ScreenAdapter.height(16),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text("笔记本"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                  ScreenAdapter.width(32),
-                  ScreenAdapter.width(16),
-                  ScreenAdapter.width(32),
-                  ScreenAdapter.width(16),
-                ),
-                margin: EdgeInsets.all(
-                  ScreenAdapter.height(16),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text("电脑"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                  ScreenAdapter.width(32),
-                  ScreenAdapter.width(16),
-                  ScreenAdapter.width(32),
-                  ScreenAdapter.width(16),
-                ),
-                margin: EdgeInsets.all(
-                  ScreenAdapter.height(16),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text("路由器"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("手机"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("笔记本"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("电脑"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("路由器"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("手机"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("笔记本"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("电脑"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("路由器"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("手机"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("笔记本"),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16),
-                    ScreenAdapter.width(32),
-                    ScreenAdapter.width(16)),
-                margin: EdgeInsets.all(ScreenAdapter.height(16)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text("电脑"),
-              ),
-            ],
+          Obx(
+            (() => Wrap(
+                  children: controller.historyList
+                      .map((value) => GestureDetector(
+                            // 长按删除
+                            onLongPress: () {
+                              Get.defaultDialog(
+                                title: "提示信息!",
+                                middleText: "您确定要删除吗?",
+                                confirm: ElevatedButton(
+                                  onPressed: () {
+                                    controller.removeHistoryData(value);
+                                    Get.back();
+                                  },
+                                  child: const Text("确定"),
+                                ),
+                                cancel: ElevatedButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: const Text("取消"),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(
+                                ScreenAdapter.width(32),
+                                ScreenAdapter.width(16),
+                                ScreenAdapter.width(32),
+                                ScreenAdapter.width(16),
+                              ),
+                              margin: EdgeInsets.all(
+                                ScreenAdapter.height(16),
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(value),
+                            ),
+                          ))
+                      .toList(),
+                )),
           ),
           const SizedBox(height: 20),
           Padding(
@@ -293,10 +233,13 @@ class SearchView extends GetView<Search1Controller> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("猜你想搜",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: ScreenAdapter.fontSize(42))),
+                Text(
+                  "猜你想搜",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: ScreenAdapter.fontSize(42),
+                  ),
+                ),
                 const Icon(Icons.refresh)
               ],
             ),
